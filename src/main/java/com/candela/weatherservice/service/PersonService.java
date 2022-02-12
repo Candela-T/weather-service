@@ -1,6 +1,8 @@
 package com.candela.weatherservice.service;
 
+import com.candela.weatherservice.dao.PersonDAO;
 import com.candela.weatherservice.model.Person;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,54 +13,30 @@ import java.util.stream.Collectors;
 public class PersonService {//en esta clase van los metodos y la logica. estos metodos después son usados
     //en el controller dentro de los endpoints
 
-    private List<Person> list;//declaro el atributo de tipo person
+    @Autowired
+    PersonDAO personDAO;
 
-    public Person getPerson(String name){//1er metodo para traer a alguien de la lista
+    public Person getPerson(int age){
 
-        List<Person> filteredList = list.stream().filter(person ->
-                person.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
-
-        return filteredList.get(0);//retorna la lista en la posicion 0 porque tiene que haber una unica persona
-        //almacenada o puede ser que no la encuentre y este vacía(en este caso con un try-catch atrtapo la
-        //excepcion en el controller
+        return personDAO.findByAge(age);
     }
 
-    public void addPerson(Person person){//2do metodo para añadir una persona a la lista
+    public void addPerson(Person person){
 
-        if (list != null)
-            list.add(person);
-        else {
-            list = new ArrayList<>();
-            list.add(person);
-        }
+        personDAO.save(person);
 
     }
 
     public List<Person> getPersons(){
-        return list;
+        return personDAO.findAll();
     }
 
-    public void deletePerson(String name) {
+    public void deletePerson(long id) {
 
-        list.removeIf(person -> person.getName().equals(name));
-        //removeIf remueve un elemento de la lista al mismo tiempo que la recorre sin necesidad
-        //de usar un Iterator
+        personDAO.deleteById(id);
     }
 
     public void putPerson(Person p) {
-    boolean found = false;
-
-        for (Person person : list) {
-            if (person.getId() == p.getId()) {
-                person.setName(p.getName());
-                person.setAge(p.getAge());
-                person.setLastName(p.getLastName());
-                found = true;
-            }
-        }
-        if(!found){
-            throw new IllegalArgumentException();
-        }
     }
 }
 

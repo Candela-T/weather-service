@@ -9,38 +9,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController//indica que es el controlador
+@RestController
 public class WeatherServiceController {
 
-    @Autowired//permite inyectar unas dependencias con otras dentro de Spring
+    @Autowired
     private PersonService personService;
 
-    @GetMapping("/person/{name}")//sirve para indicar que el metodo anotado es un endpoint dentro de la
-    // clase controller que recibe peticiones Get
-    public ResponseEntity<Object> getPersonInfo(@PathVariable(value = "name") String name){//pathVariable-->para
-    // configurar variables dentro de los propios segmentos de la URL
-    //"ResponseEntity"es una clase de SPRING para devolver respuestas en una API
+    @GetMapping("/person/{age}")
+    public ResponseEntity<Object> getPersonInfo(@PathVariable(value = "age") int age){
+
         try{
 
-            Person person = personService.getPerson(name);
+            Person person = personService.getPerson(age);
             return new ResponseEntity<>(person, HttpStatus.OK);
 
-        } catch(IndexOutOfBoundsException e){//atrapo la excepcion que puede derivar en el caso de que este
-            //vacia la lista de personas  y devuelva un elemento que no existe
+        } catch(IndexOutOfBoundsException e){
 
             return new ResponseEntity<>(
                     new ResponseDTO(HttpStatus.NOT_FOUND.value(), "ERROR. PERSON NOT FOUND."),
-                    HttpStatus.NOT_FOUND);//en vez de mandarle una persona con la clase responseDTO y haciendo
-            // uso del constructor parametrizado envio un mensj y el httpStatus
+                    HttpStatus.NOT_FOUND);
+
 
         }
     }
 
-    @PostMapping("/person")//sirve para indicar que es un endpoint de tipo post
+    @PostMapping("/person")
     public ResponseEntity<Object> postPerson(@RequestBody Person person){
 
-        personService.addPerson(person);//llamo al metodo declarado en el servicio
-        return new ResponseEntity<>(//retorno una nueva respuesta
+        personService.addPerson(person);
+        return new ResponseEntity<>(
                 new ResponseDTO(HttpStatus.CREATED.value(),
                         "THE PERSON WAS CREATED SUCCESSFULLY."), HttpStatus.CREATED);
     }
@@ -51,14 +48,14 @@ public class WeatherServiceController {
         return new ResponseEntity<>( personService.getPersons(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/person/{name}")
-    public ResponseEntity<Object> deletePerson(@PathVariable(value = "name") String name){
-        personService.deletePerson(name);
+    @DeleteMapping("/person/{id}")
+    public ResponseEntity<Object> deletePerson(@PathVariable(value = "id") long id){
+        personService.deletePerson(id);
         return new ResponseEntity<>(
-                new ResponseDTO(HttpStatus.OK.value(),//responseDTO es un json
+                new ResponseDTO(HttpStatus.OK.value(),
                 "The person was deleted successfully."),HttpStatus.OK);
     }
-//usar un body con json que corresponde a una persona
+
     @PutMapping("/person")
     public ResponseEntity<Object> putPerson(@RequestBody Person person) {
         try {
