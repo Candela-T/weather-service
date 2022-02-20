@@ -6,17 +6,16 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Repository// Es el package que contiene las interfaces que extienden de JPA
+// para que estas clases se conecten a la base de datos.
 public interface PersonDAO extends JpaRepository<Person, Long> {
 
-    Person findByName(String name);//spring data me crea una consulta sql que se ejecuta cuando ejecuto el metodo para
-    //buscar a una persona por nombre
+    Person findByName(String name);
 
     Person findByAge(Integer age);
 
     List<Person> findByLastname(String lastname);
 
     Person findById(long id);
-
 
 }

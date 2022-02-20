@@ -16,6 +16,12 @@ public class PersonService {//en esta clase van los metodos y la logica. estos m
     @Autowired
     PersonDAO personDAO;
 
+
+
+
+
+
+
     public Person getPerson(int age){
 
         return personDAO.findByAge(age);
@@ -28,7 +34,16 @@ public class PersonService {//en esta clase van los metodos y la logica. estos m
     }
 
     public List<Person> getPersons(){
-        return personDAO.findAll();
+
+        List<Person>  personList = personDAO.findAll();
+
+        if (personList.isEmpty())
+
+            throw new NullPointerException("No persons found in database");
+
+        else
+
+            return personList;
     }
 
     public void deletePerson(long id) {
@@ -37,6 +52,11 @@ public class PersonService {//en esta clase van los metodos y la logica. estos m
     }
 
     public void putPerson(Person p) {
+
+        if(personDAO.findByAge(p.getAge()) != null){
+            personDAO.save(p);
+        }
+
     }
 }
 

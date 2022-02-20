@@ -9,13 +9,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity//declaro que esta clase es mapeada a la tabla person(bd)
+@Entity// es una clase de Java ligera, cuyo estado es persistido
+// de manera asociada a una tabla en una base de datos relacional
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Person {//solo declaro los atributos. lombok se encarga de crear los constructores, getters/setters
-    //toString
-    @Id//significa que ese atributo es mi primary key
+public class Person {
+
+    @Id
     @GeneratedValue(strategy  = GenerationType.IDENTITY)//autoincremental
     private Long id;
 
@@ -24,8 +25,6 @@ public class Person {//solo declaro los atributos. lombok se encarga de crear lo
     private String lastname;
 
     private Integer age;
-
-
 
 }
 
